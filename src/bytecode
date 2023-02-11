@@ -1,0 +1,54 @@
+	[
+        {
+            "from": "0xd9145CCE52D386f254917e481eB44e9943F39138",
+            "topic": "0xeaefb7af1215a1116617e191eafafeb87cc9c6ca822fa3ad5c838eabf8d08125",
+            "event": "member",
+            "args": { 
+                    "0": "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",
+                    "1": "1000000",
+                    "addr": "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", 
+                    "tokens": "1000000"
+                } 
+        },
+        {
+            "from": "0xd9145CCE52D386f254917e481eB44e9943F39138",
+            "topic": "0x3ddab6a9351c84f74127a3d90f8f4311bcbba3eb76d43eae03bdd327aceb90e7",
+            "event": "quantity",
+            "args": { 
+                "0": "900000",
+                "tokens": "900000" 
+            }
+        } 
+    ]
+
+    > tronWeb.getEventResult("TUPz3wD356e3iV337s4cnjQS2weUdhX5ci",{eventName:"RNGIterated",size:2}).then(result => {console.log(result)})
+Promise { <pending> }
+> [
+  {
+    block: 615212,
+    timestamp: 1577440164000,
+    contract: 'TUPz3wD356e3iV337s4cnjQS2weUdhX5ci',
+    name: 'RNGIterated',
+    transaction: 'a8929bcfb8a7337d6c8c5850b5ed63cdd09ff17bbde46dad07b2c1f20c427e89',
+    result: {
+      index: '41796',
+      rng: '3f7bf1c50a01cbcb980360effa904e0e11880af8daeeb2f8da686b7b3e5d9a50',
+      timestamp: '1577440164'
+    },
+    resourceNode: 'solidityNode'
+  },
+  {
+    block: 615205,
+    timestamp: 1577440143000,
+    contract: 'TUPz3wD356e3iV337s4cnjQS2weUdhX5ci',
+    name: 'RNGIterated',
+    transaction: 'fa9e91282de9eb462efabea838c2d0465602312a87ded06524c87d8afafd743d',
+    result: {
+      index: '41795',
+      rng: 'bf190910aa5293ab12f644eb723b5460340e3ec11ac073124147e5fc92ca44d2',
+      timestamp: '1577440143'
+    },
+    resourceNode: 'solidityNode',
+    fingerprint: '2TBTeOqO3x2kJDyxT'
+  }
+]

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Lottery on Tron</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body style="text-align: center;">
+    <header>
+      <h1>Lottery on Tron</h1>
+      <!-- <p id="jackpot">Jackpot: <span>0</span> TRX</p> -->
+      <p id="jackpot">Just with 1 TRX take your chance :)</p>
+    </header>
+    <main>
+      <h2>For connecting to the page please open your Tronlink wallet and click on the connect button</h2>
+      <input type="text" id="addressWallet" placeholder="your address wallet here" readonly style="width: 100%;">
+      <button id="enter" onclick="connect()">connect</button>
+      <br>
+      <br>
+      <h2>withdraw</h2>
+      <button id="withdraw" onclick="withdraw()">admin withdraw </button>
+      <br>
+      <br>
+      <h2>see how many trx is in the contract</h2>
+      <input type="number" id="contractBalance" placeholder="contract balance" readonly >
+      <label>trx</label><br><br>
+      <button id="balance" onclick="balance()">request balance </button>
+      <br>
+      <br>
+      <h2>winnersplayers</h2>
+      <button id="winnersplayers" onclick="withdrawWinners()">get your prize</button>
+      <br>
+      <br>
+      <button id="winnersplayers" onclick="getAllAddressWinner()">see all winners player</button>
+      <h2>Winners Players</h2>
+      <ul id="players"></ul>
+      <br>
+      <br>
+      <br>
+      <br>
+      <button id="pick-winner" onclick="pickWinner()">Pick Winner</button>
+      <br>
+      <br>
+      <button id="enter-user" onclick="enter()">register for lottery</button>
+      <br>
+      <br>
+      <br>
+      <br>
+    </main>
+    <footer>
+      powered by @safeparadise
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/tronweb@latest/dist/tronweb.min.js"></script>
+    <script src="bundle.js"></script>
+    <script>
+      //abi json
+      // let abi =[{"entrys":[{"name":"withdrawWinners","stateMutability":"Nonpayable","type":"Function"},{"name":"withdraw","stateMutability":"Nonpayable","type":"Function"},{"outputs":[{"type":"address[]"},{"type":"uint256[]"}],"constant":true,"name":"getAllAddressWinner","stateMutability":"View","type":"Function"},{"name":"pickWinner","stateMutability":"Nonpayable","type":"Function"},{"payable":true,"name":"enter","stateMutability":"Payable","type":"Function"},{"stateMutability":"Nonpayable","type":"Constructor"},{"inputs":[{"name":"addr","type":"address"},{"name":"tokens","type":"uint256"}],"name":"member","type":"Event"},{"inputs":[{"name":"addr","type":"address"},{"name":"tokens","type":"uint256"}],"name":"winners","type":"Event"},{"inputs":[{"name":"tokens","type":"uint256"}],"name":"quantity","type":"Event"}]}];
+      //address contract
+      let contractAddress = "TMcEHD5jMyvSVVaxS3TwtrH9JLVgnSDWDP";
+      // let contractAddress = "TL4KdTKQ2YLvNxR8VCHK4W8eCSrz7oJstc";
+      //connect to the wallet
+      async function connect(){
+        const publicAddress = tronWeb.defaultAddress.base58;
+        console.log(publicAddress);
+        document.getElementById("addressWallet").value = publicAddress;
+      }
+      //send to enter function smart contract and register client
+      async function enter(){
+        try {
+          //get instance
+          let instance = await tronWeb.contract().at(contractAddress);
+          //send transaction and this function get the wallet address automatically
+          //callValue is the quantity of trx you should send with unit sun
+          let res = await instance.enter().send({
+            feeLimit:100_000_000,
+            callValue:1000000,
+            shouldPollResponse:true
+        });
+        console.log(res);
+        let x = res[0];
+        } catch (error) {
+          console.log('error occured');
+          console.log(error);
+        }
+      }
+      function sss(){
+        // 
+        // let ss = tronWeb.address.toHex("TAzZzaCGFhYhvwQe5piKNpQKsyQgKhzdFy");
+        // console.log(ss);
+        tronWeb.getEventResult(contractAddress,{eventName:"member",size:1}).then(result => {console.log(result[0].result.addr)})
+        x  = "0x0b3a108e35c97d66d1fdca02214fa11c5ff077aa";
+        const addressInBase58 = tronWeb.address.fromHex(x);
+        console.log(addressInBase58);
+      }
+      //choose the winner with owner address start
+      async function pickWinner(){
+        try {
+          let instance = await tronWeb.contract().at(contractAddress);
+          let res = await instance.pickWinner().send({
+            feeLimit:100_000_000,
+            callValue:0,
+            shouldPollResponse:true,
+          });
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      //request for withdraw for admin
+      async function withdraw(){
+        try {
+          let instance = await tronWeb.contract().at(contractAddress);
+          let res = await instance.withdraw().send({
+            feeLimit:100_000_000,
+            callValue:0,
+            shouldPollResponse:true,
+          });
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      //request for withdraw money for winners 
+      async function withdrawWinners(){
+        try {
+          let instance = await tronWeb.contract().at(contractAddress);
+          let res = await instance.withdrawWinners().send({
+            feeLimit:100_000_000,
+            callValue:0,
+            shouldPollResponse:true,
+          });
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      //calling function getAllAddressWinner view
+      async function getAllAddressWinner(){
+        try{
+          //geting the instance of smart contract
+          let instance = await tronWeb.contract().at(contractAddress);
+          console.log(instance);
+          let result = await instance.methods.getAllAddressWinner().call();
+          console.log(result);
+          document.getElementById("players").value = result;
+        }catch(e){
+          console.log(e);
+        }
+      }
+      async function balance(){
+        try {
+          // let res = tronLink.request({method: 'tron_requestAccounts'}) ;
+          let res = await tronWeb.trx.getBalance(contractAddress);
+          console.log(res);
+          document.getElementById('contractBalance').value = res/1000000;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+    </script>
+  </body>
+</html>
+
